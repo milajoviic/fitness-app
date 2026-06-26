@@ -8,6 +8,6 @@
         public int Reps { get; set; }
         public int Sets { get; set; }
         public int RestMinutes { get; set; }
-        public float WeightKg { get; set; }
+        public decimal WeightKg { get; set; }
     }
 }
