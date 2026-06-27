@@ -11,6 +11,5 @@ namespace FitnessApp.Entities
         public GenderEnum Gender { get; set; }
         public string PasswordHash { get; set; } = "";
         public DateTime BirthDate { get; set; }
-        public DateTime? LastPeriodDate { get; set; }
     }
 }

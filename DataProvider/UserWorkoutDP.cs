@@ -19,7 +19,7 @@ namespace FitnessApp.DataProvider
             _session = SessionManager.GetSession();
 
             _insert = _session.Prepare(
-                "INSERT INTO workouts_by_user" +
+                "INSERT INTO workouts_by_user " +
                 "(user_id, workout_date, workout_id, is_rest_day, notes, workout_type) " +
                 "VALUES (?, ?, ?, ?, ?, ?)"
                 );
@@ -52,7 +52,7 @@ namespace FitnessApp.DataProvider
                     WorkoutId = r.GetValue<Guid>("workout_id"),
                     IsRestDay = r.GetValue<bool>("is_rest_day"),
                     Notes = r.GetValue<string>("notes"),
-                    TypeOfWorkout = r.GetValue<WorkoutType>("workout_type")
+                    TypeOfWorkout = Enum.Parse<WorkoutType>(r.GetValue<string>("workout_type"))
                 });
             }
             return workouts;
@@ -62,14 +62,14 @@ namespace FitnessApp.DataProvider
         {
             w.WorkoutId = TimeUuid.NewId();
             BoundStatement statement = _insert.Bind(
-                w.UserId, w.WorkoutDate, w.WorkoutId, w.IsRestDay, w.Notes, w.TypeOfWorkout);
+                w.UserId, w.WorkoutDate, w.WorkoutId, w.IsRestDay, w.Notes, w.TypeOfWorkout.ToString());
             await _session.ExecuteAsync(statement);
         }
 
         public async Task UpdateAsync(UserWorkouts w)
         {
             BoundStatement statement = _update.Bind(
-                w.TypeOfWorkout, w.IsRestDay, w.Notes,
+                w.TypeOfWorkout.ToString(), w.IsRestDay, w.Notes,
                 w.UserId, w.WorkoutDate, w.WorkoutId);
             await _session.ExecuteAsync(statement);
         }

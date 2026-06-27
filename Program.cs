@@ -10,6 +10,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<UserWorkoutDP>();
+builder.Services.AddSingleton<UserDP>();
+builder.Services.AddSingleton<ExerciseDP>();
+
 
 var app = builder.Build();
 

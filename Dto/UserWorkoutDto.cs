@@ -7,7 +7,7 @@ namespace FitnessApp.Dto
         public record CreateWorkoutDto(
             Guid UserId,
             DateTimeOffset WorkoutDate,
-            WorkoutType TypeOfWorkout,
+            string TypeOfWorkout,
             bool IsRestDay,
             string? Notes
         );
@@ -15,7 +15,7 @@ namespace FitnessApp.Dto
             Guid UserId,
             DateTimeOffset WorkoutDate,
             Guid WorkoutId,
-            WorkoutType TypeOfWorkout,
+            string TypeOfWorkout,
             bool IsRestDay,
             string? Notes
         );
