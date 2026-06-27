@@ -12,6 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<UserWorkoutDP>();
 builder.Services.AddSingleton<UserDP>();
 builder.Services.AddSingleton<ExerciseDP>();
+builder.Services.AddSingleton<BodyMetricsDP>();
+builder.Services.AddSingleton<UserDietDP>();
 
 
 var app = builder.Build();

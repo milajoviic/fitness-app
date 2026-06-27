@@ -24,7 +24,7 @@ namespace FitnessApp.Controllers
             return Ok(exs);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeeleteExercise(Guid workoutId, int excOrder)
+        public async Task<IActionResult> DeleteExercise(Guid workoutId, int excOrder)
         {
             if (workoutId == Guid.Empty)
                 return NotFound("Ne moze da se pronadje navedeni trening");
