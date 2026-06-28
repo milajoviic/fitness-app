@@ -74,5 +74,6 @@ namespace FitnessApp.Controllers
             await _repo.UpdateAsync(workout);
             return NoContent();
         }            
+        //to do: kreirati funkciju za dodavanje note-ova posebno.
     }
 }

@@ -14,6 +14,8 @@ builder.Services.AddSingleton<UserDP>();
 builder.Services.AddSingleton<ExerciseDP>();
 builder.Services.AddSingleton<BodyMetricsDP>();
 builder.Services.AddSingleton<UserDietDP>();
+builder.Services.AddSingleton<UserHealthDP>();
+builder.Services.AddSingleton<PeriodDP>();
 
 
 var app = builder.Build();
