@@ -2,74 +2,85 @@
 using FitnessApp.Entities;
 using FitnessApp.Enums;
 using FitnessApp.DataProvider;
+using Microsoft.AspNetCore.Authorization;
+using FitnessApp.Auth;
 
 namespace FitnessApp.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class UserHealthController : ControllerBase
     {
-        //dodajemo i funkciju za racunanje bmi-a.
         private readonly UserHealthDP _health;
         public UserHealthController(UserHealthDP health )
         {
             _health = health;
         }
 
-        [HttpDelete("{userId:guid}")]
-        public async Task<IActionResult> Delete(Guid userId)
+        [HttpDelete]
+        public async Task<IActionResult> Delete()
         {
+            Guid userId = User.GetUserId();
             await _health.DeleteAsync(userId);
             return NoContent();
         }
-        [HttpDelete("{userId:guid}/notes")]
-        public async Task<IActionResult> DeleteNotes(Guid userId)
+        [HttpDelete("notes")]
+        public async Task<IActionResult> DeleteNotes()
         {
+            Guid userId = User.GetUserId();
             await _health.SetNotesAsync(userId, "");
             return NoContent();
         }
-        [HttpGet("{userId:guid}")]
-        public async Task<ActionResult<UserHealth>> GetUserHealth(Guid userId)
+        [HttpGet]
+        public async Task<ActionResult<UserHealth>> GetUserHealth()
         {
+            Guid userId = User.GetUserId();
             var results = await _health.GetByUser(userId);
             if (results == null)
                 return NotFound("Korisnik nema nista zapisano");
             return Ok(results);
         }
-        [HttpPut("{userId:guid}/height")]
-        public async Task<IActionResult> SetHeight(Guid userId, [FromBody] decimal height)
+        [HttpPut("height")]
+        public async Task<IActionResult> SetHeight([FromBody] decimal height)
         {
+            Guid userId = User.GetUserId();
             await _health.SetHeightAsync(userId, height);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/weight")]
-        public async Task<IActionResult> SetWeight(Guid userId, [FromBody] decimal weight)
+        [HttpPut("weight")]
+        public async Task<IActionResult> SetWeight([FromBody] decimal weight)
         {
+            Guid userId = User.GetUserId();
             await _health.SetWeightAsync(userId, weight);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/notes")]
-        public async Task<IActionResult> SetNotes(Guid userId, [FromBody] string notes)
+        [HttpPut("notes")]
+        public async Task<IActionResult> SetNotes([FromBody] string notes)
         {
+            Guid userId = User.GetUserId();
             await _health.SetNotesAsync(userId, notes);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/chronic")]
-        public async Task<IActionResult> AddChronicCond(Guid userId, [FromBody] string cc)
+        [HttpPut("chronic")]
+        public async Task<IActionResult> AddChronicCond([FromBody] string cc)
         {
+            Guid userId = User.GetUserId();
             await _health.AddChronicCondAsync(userId, Enum.Parse<ChronicCondEnum>(cc));
             return NoContent();
         }
-        [HttpPut("{userId:guid}/conditions")]
-        public async Task<IActionResult> SetChronicCond(Guid userId, [FromBody] List<string> conds)
+        [HttpPut("conditions")]
+        public async Task<IActionResult> SetChronicCond([FromBody] List<string> conds)
         {
+            Guid userId = User.GetUserId();
             var condEnum = conds.Select(c => Enum.Parse<ChronicCondEnum>(c)).ToList();
             await _health.SetChronicCondAsync(userId, condEnum);
             return NoContent();
         }
-        [HttpGet("{userId:guid}/bmi")]
-        public async Task<ActionResult<decimal>> GetBmi(Guid userId)
+        [HttpGet("bmi")]
+        public async Task<ActionResult<decimal>> GetBmi()
         {
+            Guid userId = User.GetUserId();
             var results = await _health.GetBmiAsync(userId);
             if (results == null)
                 return NotFound("Visina i tezina moraju biti pravilno uneti");

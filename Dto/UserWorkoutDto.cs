@@ -1,18 +1,14 @@
-﻿using FitnessApp.Enums;
-
-namespace FitnessApp.Dto
+﻿namespace FitnessApp.Dto
 {
     public class UserWorkoutDto
     {
         public record CreateWorkoutDto(
-            Guid UserId,
             DateTimeOffset WorkoutDate,
             string TypeOfWorkout,
             bool IsRestDay,
             string? Notes
         );
         public record UpdateWorkoutDto(
-            Guid UserId,
             DateTimeOffset WorkoutDate,
             Guid WorkoutId,
             string TypeOfWorkout,

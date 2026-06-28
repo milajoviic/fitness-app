@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using FitnessApp.Dto;
 using FitnessApp.Entities;
-using FitnessApp.Enums;
+using Microsoft.AspNetCore.Authorization;
+using FitnessApp.Auth;
 using FitnessApp.DataProvider;
 
 namespace FitnessApp.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ExerciseController : ControllerBase
     {
         private readonly ExerciseDP _exercise;
-        private readonly UserWorkoutDP _workouts;
 
         public ExerciseController(ExerciseDP exercise) => _exercise = exercise;
 

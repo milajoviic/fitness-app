@@ -4,10 +4,12 @@ using FitnessApp.Dto;
 using FitnessApp.Entities;
 using FitnessApp.Enums;
 using FitnessApp.DataProvider;
-
+using FitnessApp.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FitnessApp.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -17,43 +19,20 @@ namespace FitnessApp.Controllers
 
         public UserController(UserDP user) => _user = user;
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDto.RegisterUserDto dto)
+        [HttpGet("me")]
+        public async Task<ActionResult<User>> GetMe()
         {
-            if (await _user.GetByEmail(dto.Email) != null)
-                return Conflict("Korisnik sa ovom email adresom vec postoji");
-
-            var u = new User
-            {
-                UserId = Guid.NewGuid(),
-                Email = dto.Email,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Gender = Enum.Parse<GenderEnum>(dto.Gender),
-                BirthDate = dto.BirthDate
-            };
-            u.PasswordHash = _hasher.HashPassword(u, dto.Password);
-            await _user.AddAsync(u);
-            return Ok(new { u.UserId, u.Email });
-        }
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDto.LoginDto dto)
-        {
-            var user = await _user.GetByEmail(dto.Email);
-            if (user == null)
-                return Unauthorized("Pogresan email ili lozinka");
-
-            var passwordCheck = _hasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
-            if (passwordCheck == PasswordVerificationResult.Failed)
-                return Unauthorized("Pogresan email ili lozinka");
-
-            return Ok(new { user.UserId, user.Email, user.FirstName });
+            Guid userId = User.GetUserId();
+            var user = await _user.GetById(userId);
+            if (user == null) return NotFound();
+            return Ok(user);
         }
 
-        [HttpPut("{email}")]
-        public async Task<IActionResult> Update(string email, UserDto.UpdateUserDto dto)
+        [HttpPut]
+        public async Task<IActionResult> Update(UserDto.UpdateUserDto dto)
         {
-            var user = await _user.GetByEmail(email);
+            Guid userId = User.GetUserId();
+            var user = await _user.GetById(userId);
             if (user == null) return NotFound("Korisnik ne postoji.");
 
             user.FirstName = dto.FirstName;
@@ -65,10 +44,11 @@ namespace FitnessApp.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{email}")] 
-        public async Task<IActionResult> Delete(string email)
+        [HttpDelete] 
+        public async Task<IActionResult> Delete()
         {
-            var user = await _user.GetByEmail(email);
+            Guid userId = User.GetUserId();
+            var user = await _user.GetById(userId);
             if (user == null)
                 return NotFound("Korisnik sa ovom email adresom ne postoji");
 

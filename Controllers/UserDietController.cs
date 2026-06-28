@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Identity;
-using FitnessApp.Dto;
 using FitnessApp.Entities;
 using FitnessApp.Enums;
 using FitnessApp.DataProvider;
+using Microsoft.AspNetCore.Authorization;
+using FitnessApp.Auth;
 
 namespace FitnessApp.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class UserDietController : ControllerBase
     {
@@ -18,74 +19,85 @@ namespace FitnessApp.Controllers
             _diet = diet;
         }
 
-        [HttpGet("{userId:guid}/{day}")]
-        public async Task<ActionResult<UserDiet>> GetByDay(Guid userId, DateTime day)
+        [HttpGet("{day}")]
+        public async Task<ActionResult<UserDiet>> GetByDay(DateTime day)
         {
+            Guid userId = User.GetUserId();
             var diet = await _diet.GetByDay(userId, day);
             if (day == null)
                 return NotFound("Nista nije zapisano za ovaj dan");
             return Ok(diet);
         }
-        [HttpGet("{userId:guid}")]
-        public async Task<ActionResult<List<UserDiet>>> GetAllDays(Guid userId)
+        [HttpGet]
+        public async Task<ActionResult<List<UserDiet>>> GetAllDays()
         {
+            Guid userId = User.GetUserId();
             var diets = await _diet.GetAllDays(userId);
             return Ok(diets);
         }
-        [HttpDelete("{userId:guid}/{day}")]
-        public async Task<IActionResult> DeleteDay(Guid userId, DateTime day)
+        [HttpDelete("{day}")]
+        public async Task<IActionResult> DeleteDay(DateTime day)
         {
+            Guid userId = User.GetUserId();
             await _diet.DeleteDayAsync(userId, day);
             return NoContent();
         }
 
-        [HttpPut("{userId:guid}/{day}/breakfast")]
-        public async Task<IActionResult> SetBreakfast(Guid userId, DateTime day, [FromBody] string breakfast)
+        [HttpPut("{day}/breakfast")]
+        public async Task<IActionResult> SetBreakfast(DateTime day, [FromBody] string breakfast)
         {
+            Guid userId = User.GetUserId();
             await _diet.SetBreakfastAsync(userId, day, breakfast);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/{day}/lunch")]
-        public async Task<IActionResult> SetLunch(Guid userId, DateTime day, [FromBody] string lunch)
+        [HttpPut("{day}/lunch")]
+        public async Task<IActionResult> SetLunch(DateTime day, [FromBody] string lunch)
         {
+            Guid userId = User.GetUserId();
             await _diet.SetLunchAsync(userId, day, lunch);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/{day}/dinner")]
-        public async Task<IActionResult> SetDinner(Guid userId, DateTime day, [FromBody] string dinner)
+        [HttpPut("{day}/dinner")]
+        public async Task<IActionResult> SetDinner(DateTime day, [FromBody] string dinner)
         {
+            Guid userId = User.GetUserId();
             await _diet.SetDinnerAsync(userId, day, dinner);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/{day}/calories")]
-        public async Task<IActionResult> SetCalories(Guid userId, DateTime day, [FromBody] int calories)
+        [HttpPut("{day}/calories")]
+        public async Task<IActionResult> SetCalories(DateTime day, [FromBody] int calories)
         {
+            Guid userId = User.GetUserId();
             await _diet.SetCaloriesAsync(userId, day, calories);
             return NoContent();
         }
 
-        [HttpPut("{userId:guid}/{day}/snack")]
-        public async Task<IActionResult> AddSnack(Guid userId, DateTime day, [FromBody] string snack)
+        [HttpPut("{day}/snack")]
+        public async Task<IActionResult> AddSnack(DateTime day, [FromBody] string snack)
         {
+            Guid userId = User.GetUserId();
             await _diet.AddSnackAsync(userId, day, snack);
             return NoContent();
         }
-        [HttpPut("{userId:guid}/{day}/supplement")]
-        public async Task<IActionResult> AddSupplement(Guid userId, DateTime day, [FromBody] string supplement)
+        [HttpPut("{day}/supplement")]
+        public async Task<IActionResult> AddSupplement(DateTime day, [FromBody] string supplement)
         {
+            Guid userId = User.GetUserId();
             await _diet.AddSupplementAsync(userId, day, Enum.Parse<SupplementsEnum>(supplement));
             return NoContent();
         }
 
-        [HttpDelete("{userId:guid}/day/snack")]
-        public async Task<IActionResult> RemoveSnack(Guid userId, DateTime day, [FromBody] string snack)
+        [HttpDelete("{day}/snack")]
+        public async Task<IActionResult> RemoveSnack(DateTime day, [FromBody] string snack)
         {
+            Guid userId = User.GetUserId();
             await _diet.RemoveSnackAsync(userId, day, snack);
             return NoContent();
         }
-        [HttpDelete("{userId:guid}/{day}/supplement")]
-        public async Task<IActionResult> RemoveSupplement(Guid userId, DateTime day, [FromBody] string supplement)
+        [HttpDelete("{day}/supplement")]
+        public async Task<IActionResult> RemoveSupplement(DateTime day, [FromBody] string supplement)
         {
+            Guid userId = User.GetUserId();
             await _diet.RemoveSupplementAsync(userId, day, Enum.Parse<SupplementsEnum>(supplement));
             return NoContent();
         }

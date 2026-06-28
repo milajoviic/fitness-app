@@ -4,7 +4,6 @@
     {
         public record CreateBodyMetricsDto
         (
-            Guid UserId,
             string BodyPart,
             decimal Value
         );
