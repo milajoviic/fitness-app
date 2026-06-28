@@ -65,4 +65,4 @@ namespace FitnessApp.Controllers
             return Ok(phase.ToString());
         }
     }
-
+}
