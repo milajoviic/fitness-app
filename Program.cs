@@ -35,7 +35,12 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
-}); ;
+});
+builder.Services.AddCors(options =>
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()));
 
 builder.Services.AddSingleton<UserWorkoutDP>();
 builder.Services.AddSingleton<UserDP>();
@@ -63,6 +68,7 @@ builder.Services.AddSingleton<TokenService>();
 builder.Services.AddSingleton<RefreshTokenDP>();
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
