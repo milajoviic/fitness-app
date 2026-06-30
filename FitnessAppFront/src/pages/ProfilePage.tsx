@@ -26,7 +26,7 @@ export function ProfilePage() {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Sigurno želiš da obrišeš nalog? Ovo je trajno.")) return;
+    if (!confirm("Da li ste sigurni da želie trajno da obrišete nalog?")) return;
     try {
       await userApi.remove();
       await logout();          
