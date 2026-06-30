@@ -1,6 +1,4 @@
 ﻿using Cassandra;
-using System;
-using System.IO;
 
 namespace FitnessApp
 {

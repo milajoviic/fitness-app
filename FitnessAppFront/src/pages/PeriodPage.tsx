@@ -48,27 +48,28 @@ export function PeriodPage() {
   };
 
   return (
-    <div style={{ maxWidth: 500, margin: "40px auto", display: "grid", gap: 16 }}>
+  <div className="page-pink">
+    <div className="card" style={{ maxWidth: 500, display: "grid", gap: 16 }}>
       <h2>Menstrualni ciklus</h2>
 
       {phase && (
-        <div style={{ padding: 12, background: "#fff0f5", borderRadius: 8 }}>
+        <div style={{ padding: 12, background: "rgba(255,255,255,0.7)", borderRadius: 8 }}>
           Trenutna faza: <strong>{phase}</strong>
         </div>
       )}
 
-      <div style={{ display: "grid", gap: 8, padding: 16, border: "1px solid #ddd", borderRadius: 8 }}>
+      <div style={{ display: "grid", gap: 8, padding: 16, background: "rgba(255,255,255,0.6)", borderRadius: 8 }}>
         <h3>Dodaj menstruaciju</h3>
         <label>Početak: <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} /></label>
         <label>Kraj (opciono): <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} /></label>
         <input placeholder="Beleške (opciono)" value={notes} onChange={(e) => setNotes(e.target.value)} />
         <button onClick={handleAdd}>Dodaj</button>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
-      <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 6 }}>
+      <ul>
         {periods.map((p) => (
-          <li key={p.startDate} style={{ display: "flex", justifyContent: "space-between", padding: 8, border: "1px solid #eee", borderRadius: 6 }}>
+          <li key={p.startDate} className="list-item">
             <span>
               {new Date(p.startDate).toLocaleDateString()}
               {p.endDate && ` — ${new Date(p.endDate).toLocaleDateString()}`}
@@ -79,5 +80,6 @@ export function PeriodPage() {
         ))}
       </ul>
     </div>
+  </div>
   );
 }

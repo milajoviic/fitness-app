@@ -13,26 +13,31 @@ export function HealthPage() {
   const [chronic, setChronic] = useState("Diabetes");
 
   const load = async () => {
-    setError("");
-    try {
-      const h = await healthApi.get();
-      setHealth(h);
-      setHeight(h.height?.toString() ?? "");
-      setWeight(h.weight?.toString() ?? "");
-      setNotes(h.notes ?? "");
-    } catch (err: any) {
-      if (err.response?.status === 404) {
-        setHealth(null);   
-      } else {
-        setError("Greška pri učitavanju.");
+  setError("");
+  try {
+    const h = await healthApi.get();
+    setHealth(h);
+    setHeight(h.height?.toString() ?? "");
+    setWeight(h.weight?.toString() ?? "");
+    setNotes(h.notes ?? "");
+    if (h.height && h.weight) {
+      try {
+        setBmi(await healthApi.getBmi());
+      } catch {
+        setBmi(null);
       }
+    } else {
+      setBmi(null);   
     }
-    try {
-      setBmi(await healthApi.getBmi());
-    } catch {
+  } catch (err: any) {
+    if (err.response?.status === 404) {
+      setHealth(null);
       setBmi(null);
+    } else {
+      setError("Greška pri učitavanju.");
     }
-  };
+  }
+};  
 
   useEffect(() => { load(); }, []);
 
@@ -44,35 +49,40 @@ export function HealthPage() {
   const row = { display: "flex", gap: 8, alignItems: "center" } as const;
 
   return (
-    <div style={{ maxWidth: 500, margin: "40px auto", display: "grid", gap: 16 }}>
+  <div className="page">
+    <div className="card" style={{ maxWidth: 500, display: "grid", gap: 16 }}>
       <h2>Zdravstveni profil</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
       {bmi !== null && (
-        <div style={{ padding: 12, background: "#f0f8ff", borderRadius: 8 }}>
+        <div style={{ padding: 12, background: "rgba(255,255,255,0.7)", borderRadius: 8 }}>
           <strong>BMI: {bmi}</strong>
         </div>
       )}
 
       <div style={row}>
-        <span style={{ width: 80 }}>Visina (cm):</span>
+        <span style={{ width: 90 }}>Visina (cm):</span>
         <input type="number" value={height} onChange={(e) => setHeight(e.target.value)} />
         <button onClick={saveHeight}>Sačuvaj</button>
       </div>
       <div style={row}>
-        <span style={{ width: 80 }}>Težina (kg):</span>
+        <span style={{ width: 90 }}>Težina (kg):</span>
         <input type="number" value={weight} onChange={(e) => setWeight(e.target.value)} />
         <button onClick={saveWeight}>Sačuvaj</button>
       </div>
       <div style={row}>
-        <span style={{ width: 80 }}>Beleške:</span>
+        <span style={{ width: 90 }}>Beleške:</span>
         <input style={{ flex: 1 }} value={notes} onChange={(e) => setNotes(e.target.value)} />
         <button onClick={saveNotes}>Sačuvaj</button>
       </div>
 
       <div>
         <strong>Hronične bolesti:</strong>
-        <ul>{(health?.chronicCond ?? []).map((c, i) => <li key={i}>{c}</li>)}</ul>
+        <ul style={{ margin: "8px 0" }}>
+          {(health?.chronicCond ?? []).map((c, i) => (
+            <li key={i} className="list-item"><span>{c}</span></li>
+          ))}
+        </ul>
         <div style={row}>
           <select value={chronic} onChange={(e) => setChronic(e.target.value)}>
             <option value="Diabetes">Dijabetes</option>
@@ -85,5 +95,6 @@ export function HealthPage() {
         </div>
       </div>
     </div>
+  </div>
   );
 }

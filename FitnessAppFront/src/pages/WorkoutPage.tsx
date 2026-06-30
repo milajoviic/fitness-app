@@ -3,12 +3,14 @@ import { workoutsApi } from "../api/workouts";
 import type { Workout } from "../types/workout";
 import { ExerciseList } from "../components/ExerciseList";
 
+const today = () => new Date().toISOString().slice(0, 10);
+
 export function WorkoutsPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const [workoutDate, setWorkoutDate] = useState("");
+  const [workoutDate, setWorkoutDate] = useState(today());
   const [typeOfWorkout, setTypeOfWorkout] = useState("Cardio");
   const [isRestDay, setIsRestDay] = useState(false);
   const [notes, setNotes] = useState("");
@@ -54,18 +56,19 @@ export function WorkoutsPage() {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "40px auto" }}>
+  <div className="page">
+    <div className="card">
       <h2>Moji treninzi</h2>
 
-      <div style={{ display: "grid", gap: 8, marginBottom: 24, padding: 16, border: "1px solid #ddd", borderRadius: 8 }}>
+      <div style={{ display: "grid", gap: 8, marginBottom: 24, padding: 16, background: "rgba(255,255,255,0.6)", borderRadius: 8 }}>
         <h3>Dodaj trening</h3>
         <input type="date" value={workoutDate} onChange={(e) => setWorkoutDate(e.target.value)} />
-        <select value={typeOfWorkout} onChange={(e) => setTypeOfWorkout(e.target.value)}>
+        {!isRestDay &&(<select value={typeOfWorkout} onChange={(e) => setTypeOfWorkout(e.target.value)}>
           <option value="Cardio">Kardio</option>
-          <option value="Aerobic">Aerobik</option>
           <option value="Strength">Trening snage</option>
+          <option value="Aerobic">Aerobik</option>
           <option value="Flexibility">Fleksibilnost</option>
-        </select>
+        </select>)}
         <label>
           <input type="checkbox" checked={isRestDay} onChange={(e) => setIsRestDay(e.target.checked)} /> Dan odmora
         </label>
@@ -74,12 +77,12 @@ export function WorkoutsPage() {
       </div>
 
       {loading && <p>Učitavanje...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {!loading && workouts.length === 0 && <p>Još nema treninga.</p>}
 
-      <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+      <ul>
         {workouts.map((w) => (
-          <li key={w.workoutId} style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
+          <li key={w.workoutId} className="list-item" style={{ flexDirection: "column", alignItems: "stretch" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>
                 <strong>{new Date(w.workoutDate).toLocaleDateString()}</strong>
@@ -88,9 +91,9 @@ export function WorkoutsPage() {
               </span>
               <span style={{ display: "flex", gap: 8 }}>
                 {!w.isRestDay && (
-                <button onClick={() => setOpenWorkoutId(openWorkoutId === w.workoutId ? null : w.workoutId)}>
-                {openWorkoutId === w.workoutId ? "Sakrij vežbe" : "Vežbe"}
-                </button>
+                  <button onClick={() => setOpenWorkoutId(openWorkoutId === w.workoutId ? null : w.workoutId)}>
+                    {openWorkoutId === w.workoutId ? "Sakrij vežbe" : "Vežbe"}
+                  </button>
                 )}
                 <button onClick={() => handleDelete(w)}>Obriši</button>
               </span>
@@ -100,5 +103,6 @@ export function WorkoutsPage() {
         ))}
       </ul>
     </div>
+  </div>
   );
 }

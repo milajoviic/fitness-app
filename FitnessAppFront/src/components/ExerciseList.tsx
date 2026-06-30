@@ -47,27 +47,42 @@ export function ExerciseList({ workoutId }: { workoutId: string }) {
   };
 
   return (
-    <div style={{ marginTop: 8, paddingLeft: 16, borderLeft: "2px solid #eee" }}>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+  <div style={{ marginTop: 12, paddingLeft: 16, borderLeft: "3px solid #f5d020" }}>
+    {error && <p className="error">{error}</p>}
 
-      {exercises.length === 0 && <p style={{ color: "#888" }}>Nema vežbi.</p>}
-      <ol style={{ display: "grid", gap: 4 }}>
-        {exercises.map((e) => (
-          <li key={e.excOrder} style={{ display: "flex", justifyContent: "space-between" }}>
-            <span>{e.name} — {e.sets}×{e.reps}, {e.weightKg}kg, pauza {e.restMinutes}min</span>
-            <button onClick={() => handleDelete(e)}>×</button>
-          </li>
-        ))}
-      </ol>
+    {exercises.length === 0 && <p style={{ color: "#8a8460" }}>Nema vežbi.</p>}
+    <ol style={{ display: "grid", gap: 6, margin: "8px 0" }}>
+      {exercises.map((e) => (
+        <li key={e.excOrder} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{e.name} — {e.sets}×{e.reps}, {e.weightKg}kg, pauza {e.restMinutes}min</span>
+          <button onClick={() => handleDelete(e)}>Ukloni</button>
+        </li>
+      ))}
+    </ol>
 
-      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: 8 }}>
-        <input placeholder="naziv" value={name} onChange={(e) => setName(e.target.value)} style={{ width: 120 }} />
-        <input placeholder="serije" type="number" value={sets} onChange={(e) => setSets(e.target.value)} style={{ width: 70 }} />
-        <input placeholder="ponav." type="number" value={reps} onChange={(e) => setReps(e.target.value)} style={{ width: 70 }} />
-        <input placeholder="kg" type="number" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} style={{ width: 60 }} />
-        <input placeholder="pauza" type="number" value={restMinutes} onChange={(e) => setRestMinutes(e.target.value)} style={{ width: 60 }} />
-        <button onClick={handleAdd}>Dodaj vežbu</button>
-      </div>
+    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            Naziv
+            <input value={name} onChange={(e) => setName(e.target.value)} />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            Broj serija
+            <input value={sets} onChange={(e) => setSets(e.target.value)} />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            Br. ponavljanja
+            <input value={reps} onChange={(e) => setReps(e.target.value)} />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            Kg
+            <input value={weightKg} onChange={(e) => setWeightKg(e.target.value)} />
+        </label>
+        <label style={{ display: "grid", gap: 4, fontSize: 13 }}>
+            Pauza
+            <input value={restMinutes} onChange={(e) => setRestMinutes(e.target.value)} />
+        </label>
+      <button onClick={handleAdd}>Dodaj vežbu</button>
     </div>
-  );
+  </div>
+    );
 }

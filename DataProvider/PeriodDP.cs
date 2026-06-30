@@ -30,7 +30,7 @@ namespace FitnessApp.DataProvider
                 "WHERE user_id = ?"
             );
             _setNotes = _session.Prepare(
-                "UPDATE period_by_user SET notes = ? WHERE user_id = ?"    
+                "UPDATE period_by_user SET notes = ? WHERE user_id = ? AND start_date = ?"    
             );
         }
 
@@ -64,7 +64,7 @@ namespace FitnessApp.DataProvider
         }
 
         public async Task SetNotesAsync(Guid userId, string notes) =>
-            await _session.ExecuteAsync(_setNotes.Bind(userId, notes));
+            await _session.ExecuteAsync(_setNotes.Bind(notes, userId));
 
         public async Task DeleteAsync(Guid userId, DateTime sd) =>
             await _session.ExecuteAsync(_delete.Bind(userId, ToLocalDate(sd)));

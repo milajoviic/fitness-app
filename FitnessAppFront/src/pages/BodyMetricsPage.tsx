@@ -35,8 +35,19 @@ export function BodyMetricsPage() {
     await load();
   };
 
+  const unit = (part: string) => part === "weight" ? "kg" : "cm";
+
+  const labelBP = (part: string) => {
+    if (part === "weight") return "Težina";
+    if (part === "waist") return "Struk";
+    if (part === "hips") return "Kukovi";
+    if (part === "chest") return "Grudi";
+    return part;
+  }
+
   return (
-    <div style={{ maxWidth: 500, margin: "40px auto", display: "grid", gap: 16 }}>
+  <div className="page">
+    <div className="card" style={{ maxWidth: 500, display: "grid", gap: 16 }}>
       <h2>Mere tela</h2>
 
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
@@ -53,16 +64,23 @@ export function BodyMetricsPage() {
         <input type="number" placeholder="vrednost" value={value} onChange={(e) => setValue(e.target.value)} />
         <button onClick={handleAdd}>Dodaj merenje</button>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
 
-      <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 6 }}>
+      <ul>
         {metrics.map((m) => (
-          <li key={m.metricId} style={{ display: "flex", justifyContent: "space-between", padding: 8, border: "1px solid #eee", borderRadius: 6 }}>
-            <span>{new Date(m.recordedAt).toLocaleDateString()} — {m.value}</span>
+          <li key={m.metricId} className="list-item">
+            <span>
+              {new Date(m.recordedAt).toLocaleDateString()}
+              {" — "}
+              {m.value} {unit(m.bodyPart)}
+              {" — "}
+              {labelBP(m.bodyPart)}
+            </span>
             <button onClick={() => handleDelete(m)}>Obriši</button>
           </li>
         ))}
       </ul>
     </div>
+  </div>
   );
 }

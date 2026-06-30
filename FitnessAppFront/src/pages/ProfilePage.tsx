@@ -15,7 +15,8 @@ export function ProfilePage() {
   const [birthDate, setBirthDate] = useState(user?.birthDate?.slice(0, 10) ?? "");
 
   const handleUpdate = async () => {
-    setError(""); setMsg("");
+    setError(""); 
+    setMsg("");
     try {
       await userApi.update({ firstName, lastName, gender, birthDate });
       setMsg("Profil sačuvan.");
@@ -36,9 +37,10 @@ export function ProfilePage() {
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "40px auto", display: "grid", gap: 8 }}>
+  <div className="page">
+    <div className="card" style={{ maxWidth: 400, display: "grid", gap: 10 }}>
       <h2>Moj profil</h2>
-      <p style={{ color: "#888" }}>{user?.email}</p>
+      <p style={{ color: "#8a8460" }}>{user?.email}</p>
 
       <label>Ime: <input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label>
       <label>Prezime: <input value={lastName} onChange={(e) => setLastName(e.target.value)} /></label>
@@ -51,11 +53,12 @@ export function ProfilePage() {
       <label>Datum rođenja: <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} /></label>
 
       <button onClick={handleUpdate}>Sačuvaj izmene</button>
-      {msg && <p style={{ color: "green" }}>{msg}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {msg && <p className="success">{msg}</p>}
+      {error && <p className="error">{error}</p>}
 
-      <hr style={{ margin: "16px 0" }} />
-      <button onClick={handleDelete} style={{ color: "red" }}>Obriši nalog</button>
+      <hr style={{ margin: "16px 0", border: "none", borderTop: "1px solid #e0d8a8" }} />
+      <button onClick={handleDelete} style={{ background: "#e0a0a0", color: "#fff" }}>Obriši nalog</button>
     </div>
-  );
+  </div>
+    );
 }

@@ -14,14 +14,14 @@ namespace FitnessApp.DataProvider
         {
             _session = SessionManager.GetSession();
             _insert = _session.Prepare(
-                "INSERT INTO refresh_tokens (refresh_token, user_id, expires_at) " +
+                "INSERT INTO refresh_tokens (token_value, user_id, expires_at) " +
                 "VALUES (?, ?, ?)"
             );
             _select = _session.Prepare(
-                "SELECT user_id, expires_at FROM refresh_tokens WHERE refresh_token = ?"    
+                "SELECT user_id, expires_at FROM refresh_tokens WHERE token_value = ?"    
             );
             _delete = _session.Prepare(
-                "DELETE FROM refresh_tokens WHERE refresh_token = ?"    
+                "DELETE FROM refresh_tokens WHERE token_value = ?"    
             );
         }
         public async Task SaveAsync(string token, Guid userId, DateTimeOffset expiresAt)

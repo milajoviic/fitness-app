@@ -85,7 +85,7 @@ namespace FitnessApp.DataProvider
         {
             var user = await GetByUser(userId);
 
-            if (user.Height == null)
+            if (user.Height == 0 || user.Weight == 0 || user == null)
                 return null;
             if (user.Height <= 0 || user.Weight <= 0)
                 return null;
