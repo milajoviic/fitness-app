@@ -43,7 +43,7 @@ namespace FitnessApp.DataProvider
                 {
                     UserId = r.GetValue<Guid>("user_id"),
                     BodyPart = r.GetValue<string>("body_part"),
-                    MetricId = r.GetValue<Guid>("meric_id"),
+                    MetricId = r.GetValue<Guid>("metric_id"),
                     RecordedAt = r.GetValue<DateTimeOffset>("recorded_at"),
                     Value = r.GetValue<decimal>("value")
                 });
