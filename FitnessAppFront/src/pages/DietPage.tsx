@@ -2,16 +2,14 @@ import { useEffect, useState } from "react";
 import { dietApi } from "../api/diet";
 import type { Diet } from "../types/diet";
 
-// danasnji datum kao "YYYY-MM-DD"
 const today = () => new Date().toISOString().slice(0, 10);
 
 export function DietPage() {
   const [day, setDay] = useState(today());
   const [diet, setDiet] = useState<Diet | null>(null);
-  const [allDays, setAllDays] = useState<Diet[]>([]);   // istorija svih dana
+  const [allDays, setAllDays] = useState<Diet[]>([]);   
   const [error, setError] = useState("");
 
-  // polja za unos
   const [breakfast, setBreakfast] = useState("");
   const [lunch, setLunch] = useState("");
   const [dinner, setDinner] = useState("");
@@ -19,7 +17,6 @@ export function DietPage() {
   const [snack, setSnack] = useState("");
   const [supplement, setSupplement] = useState("Creatine");
 
-  // ucitaj izabrani dan
   const load = async () => {
     setError("");
     try {
@@ -39,19 +36,17 @@ export function DietPage() {
     }
   };
 
-  // ucitaj sve dane (istorija)
   const loadAllDays = async () => {
     try {
       setAllDays(await dietApi.getAll());
     } catch {
-      // ako ne uspe, ostavi praznu listu
+      
     }
   };
 
-  useEffect(() => { load(); }, [day]);          // kad se promeni dan
-  useEffect(() => { loadAllDays(); }, []);      // svi dani jednom, pri otvaranju
+  useEffect(() => { load(); }, [day]);         
+  useEffect(() => { loadAllDays(); }, []);      
 
-  // svaki "sacuvaj" posalje svoj PUT pa osvezi i dan i istoriju
   const saveBreakfast = async () => { await dietApi.setBreakfast(day, breakfast); await load(); await loadAllDays(); };
   const saveLunch     = async () => { await dietApi.setLunch(day, lunch); await load(); await loadAllDays(); };
   const saveDinner    = async () => { await dietApi.setDinner(day, dinner); await load(); await loadAllDays(); };
@@ -92,7 +87,6 @@ export function DietPage() {
         </div>
         {error && <p className="error">{error}</p>}
 
-        {/* OBROCI */}
         <div style={row}>
           <span style={{ width: 90 }}>Doručak:</span>
           <input style={{ flex: 1 }} value={breakfast} onChange={(e) => setBreakfast(e.target.value)} />
@@ -114,7 +108,6 @@ export function DietPage() {
           <button onClick={saveCalories}>Sačuvaj</button>
         </div>
 
-        {/* UZINE */}
         <div>
           <strong>Užine:</strong>
           <ul style={{ margin: "8px 0" }}>
@@ -128,7 +121,6 @@ export function DietPage() {
           </div>
         </div>
 
-        {/* DODACI */}
         <div>
           <strong>Dodaci:</strong>
           <ul style={{ margin: "8px 0" }}>
@@ -146,7 +138,6 @@ export function DietPage() {
           </div>
         </div>
 
-        {/* ISTORIJA PO DANIMA */}
         <div style={{ marginTop: 24, borderTop: "1px solid #e0d8a8", paddingTop: 16 }}>
           <h3>Istorija po danima</h3>
           {allDays.length === 0 && <p style={{ color: "#8a8460" }}>Još nema unetih dana.</p>}
